@@ -1,4 +1,4 @@
-totalmac=3
+totalmac=15
 usetekli=True
 no=False
 yes=True

@@ -38,7 +38,8 @@ def mark(mac1,sonuc1,mac2,sonuc2):
 
     hepsi[mac1-1][mac2-1].mark(sonuc1,sonuc2)
 
-mark(15,2,14,2)
+
 if __name__=="__main__":
+    mark(15, 2, 14, 2)
     for i in range(len(hepsi)):
         print(hepsi[i])

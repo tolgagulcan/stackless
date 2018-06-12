@@ -3,7 +3,6 @@ import pynput,sys
 from key import getanswer
 import pickle
 from stackless import tasklet,run
-
 from readmatches import maclar
 
 teklimackod=[]
