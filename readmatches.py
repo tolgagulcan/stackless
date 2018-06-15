@@ -9,12 +9,12 @@ with open("maclar.txt") as f:
         maclar.append(tup)
 
 def getmacname(kod:int):
-    return (maclar[kod-1][0],maclar[kod-1][1])
+    return (maclar[kod][0],maclar[kod][1])
 
-def getmacnamek(kod:int,i:int=5):
+def getmacnamek(kod:int,i:int=7):
     a=getmacname(kod)
     return (a[0][0:i],a[1][0:i])
 
 if __name__=="__main__":
-    for a in range(1,16):
+    for a in range(15):
         print(getmacnamek(a))

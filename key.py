@@ -5,6 +5,7 @@ import os
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')
 def on_press(key):
+
     global tercih
     if key==keyboard.Key.left:
 
@@ -14,10 +15,15 @@ def on_press(key):
         tercih=False
         return False
 
+    elif key==keyboard.Key.esc:
+        tercih="quit"
+        return False
+
+
 
 
 def getanswer(whattoprint):
-    cls()
+    #cls()
     print(whattoprint)
     with keyboard.Listener(
             on_press=on_press,

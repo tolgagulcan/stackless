@@ -7,7 +7,7 @@
   Danimarka 	 Meksika  
   Fransa 	 Amerika  
   Avusturya 	 Brezilya  
-  Vasco Da Gama 	 Sport_Recife  
+  Vasco_Da_Gama 	 Sport_Recife  
   Atletico_Mg 	 Fluminense  
   Bahia 	 Botafogo  
   Chapecoense 	 Cruzeiro  

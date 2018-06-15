@@ -1,71 +1,126 @@
 from mergesort import mergesort
-import pynput,sys,pickle,os.path
+import pynput, sys, pickle, os.path
 from key import getanswer
-from readmatches import maclar
+from readmatches import maclar, getmacname, getmacnamek
 from bitarray import bitarray
 from settings import totalmac
+times = 0
+import random
 
+teklifstring = """
+{0:^40}|{6:^20}||{7:^20}|
+{0:^40}|{5}||{5}|
+{0:^40}|{1:^20}||{8:^20}|
+{0:^40}|{0:^20}||{0:^20}|
+{0:^40}|{2:^20}||{9:^20}|
+{0:^40}|{5}||{5}|
+{0:^40}|{0:^20}||{0:^20}|
+{0:^40}|{3:^20}||{4:^20}|
+{0:^40}|{0:^20}||{0:^20}|
+{0:^40}|{5}||{5}|
+{0:^40}|{6:^20}||{7:^20}|
+"""
 if os.path.exists("bin\\teklisquare.bin") and os.path.exists("bin\\teklimarked.bin"):
-    with open("bin\\teklisquare.bin","rb") as f:
-        teklisquare=pickle.load(f)
-    with open("bin\\teklimarked.bin","rb") as f:
+    with open("bin\\teklisquare.bin", "rb") as f:
+        teklisquare = pickle.load(f)
+    with open("bin\\teklimarked.bin", "rb") as f:
         teklimarked = pickle.load(f)
 else:
-    teklisquare=bitarray((totalmac*3)*(totalmac*3))
-    teklimarked=bitarray((totalmac*3)*(totalmac*3))
+    teklisquare = bitarray((totalmac * 3) * (totalmac * 3))
+    teklimarked = bitarray((totalmac * 3) * (totalmac * 3))
     teklisquare.setall(False)
     teklimarked.setall(False)
-
 class teklimac:
     __slots__ = {"sira"}
-    def __init__(self,x):
-        self.sira=x
+    def __init__(self, x):
+        self.sira = x
     def __lt__(self, other):
-        return teklimac.compare(self,other)
+        return teklimac.compare(self, other)
     def __repr__(self):
-        return str(self.sira)
+        val1 = divmod(self.sira, 3)
+        print(val1)
+        ms1 = {"mac": val1[0], "sonuc": val1[1]}
+        m11 = getmacname(ms1["mac"])[0]
+        m12 = getmacname(ms1["mac"])[1]
 
-def askquestion(first,second):
-    return False
+        return m11 + " - " + str(ms1["sonuc"]) + " - " + m12
+def complement(x: int):
+    if x == 0:
+        return "1 - 2"
+    if x == 1:
+        return "0 - 2"
+    if x == 2:
+        return "1 - 0"
+    pass
+
+
+
+def askquestion(first, second):
+    global times
+    times = times + 1
+    val1 = divmod(first, 3)
+    val2 = divmod(second, 3)
+    ms1 = {"mac": val1[0] , "sonuc": val1[1]}
+    ms2 = {"mac": val2[0] , "sonuc": val2[1]}
+    m11 = getmacname(ms1["mac"])[0]
+    m12 = getmacname(ms1["mac"])[1]
+    m21 = getmacname(ms2["mac"])[0]
+    m22 = getmacname(ms2["mac"])[1]
+    skor1 = complement(ms1["sonuc"])
+    skor2 = complement(ms2["sonuc"])
+    whattoprint = teklifstring.format(" ", m11, m12, skor1, skor2, "-" * 20, "<<<-----", "----->>>", m21, m22)
+    answer = getanswer(whattoprint)
+    return answer
+
+def returnplace(mac,sonuc):
+
+    sira=(mac)*3+sonuc
+
+    return teklimaclarsira[sira]
 
 def save(finished=True):
     with open("bin\\teklisquare.bin", "wb") as f:
         pickle.dump(teklisquare, f)
     with open("bin\\teklimarked.bin", "wb") as f:
         pickle.dump(teklimarked, f)
+    if "__name__"=="__main__":
         if finished:
             print("Finished")
         print("Exiting...")
         sys.exit()
-
-
-def compare(o1:teklimac,o2:teklimac):
-
-    first=min(o1.sira,o2.sira)
-    second=o1.sira+o2.sira-first
-
-    place=first*45+second
-    print(place)
+def compare(o1: teklimac, o2: teklimac):
+    if o1.sira>o2.sira:
+        return not compare(o2,o1)
+    place = o1.sira * totalmac * 3 + o2.sira
     if teklimarked[place]:
         return teklisquare[place]
     else:
-        answer=askquestion(first,second)
-        if answer=="quit":
+        answer = askquestion(o1.sira, o2.sira)
+        if answer == "quit":
             save(False)
-
         else:
+            teklimarked[place] = True
+            teklisquare[place] = answer
             return answer
     return True
+teklimac.compare = compare
+teklimaclar = []
+teklimaclarsira=list(range(totalmac * 3))
+for i in range(totalmac * 3):
+    teklimaclar.append(teklimac(i))
+#random.shuffle(teklimaclar)
+
+mergesort(teklimaclar)
 
 
-teklimac.compare=compare
-maclar=[]
-for i in range(45):
-    maclar.append(teklimac(i))
+for a,k in enumerate(teklimaclar):
 
-mergesort(maclar)
+    teklimaclarsira[k.sira]=a
+    
 
-print(maclar)
-print(teklisquare)
-print(teklimarked)
+for a in teklimaclar:
+    print(a)
+
+
+
 save()
